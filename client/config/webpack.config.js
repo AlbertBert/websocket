@@ -200,7 +200,10 @@ module.exports = function (webpackEnv) {
       : isEnvDevelopment && 'cheap-module-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
-    entry: paths.appIndexJs,
+    entry: {
+      home: isEnvDevelopment && !shouldUseReactRefresh ? [ webpackDevClientEntry, paths.appIndexJs, ] : paths.appIndexJs,
+      admin: isEnvDevelopment && !shouldUseReactRefresh ? [ webpackDevClientEntry, paths.adminIndexJs ] : paths.adminIndexJs,
+    },
     output: {
       // The build folder.
       path: paths.appBuild,
@@ -209,11 +212,10 @@ module.exports = function (webpackEnv) {
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
       filename: isEnvProduction
-        ? 'static/js/[name].[contenthash:8].js'
-        : isEnvDevelopment && 'static/js/bundle.js',
-      // There are also additional JS chunk files if you use code splitting.
+      ? 'static/js/[name].[contenthash:8].js'
+      : isEnvDevelopment && 'static/js/[name].bundle.js',
       chunkFilename: isEnvProduction
-        ? 'static/js/[name].[contenthash:8].chunk.js'
+        ? 'static/js/*[name].[contenthash:8].chunk.js*'
         : isEnvDevelopment && 'static/js/[name].chunk.js',
       assetModuleFilename: 'static/media/[name].[hash][ext]',
       // webpack uses `publicPath` to determine where the app is being served from.
@@ -569,7 +571,36 @@ module.exports = function (webpackEnv) {
           {},
           {
             inject: true,
+            chunks: ['home'],
             template: paths.appHtml,
+            filename: 'index.html'
+          },
+          isEnvProduction
+            ? {
+                minify: {
+                  removeComments: true,
+                  collapseWhitespace: true,
+                  removeRedundantAttributes: true,
+                  useShortDoctype: true,
+                  removeEmptyAttributes: true,
+                  removeStyleLinkTypeAttributes: true,
+                  keepClosingSlash: true,
+                  minifyJS: true,
+                  minifyCSS: true,
+                  minifyURLs: true,
+                },
+              }
+            : undefined
+        )
+      ),
+      new HtmlWebpackPlugin(
+        Object.assign(
+          {},
+          {
+            inject: true,
+            chunks: ['admin'],
+            template: paths.adminHtml,
+            filename: 'admin.html'
           },
           isEnvProduction
             ? {
@@ -642,9 +673,21 @@ module.exports = function (webpackEnv) {
             manifest[file.name] = file.path;
             return manifest;
           }, seed);
-          const entrypointFiles = entrypoints.main.filter(
-            fileName => !fileName.endsWith('.map')
-          );
+          // const entrypointFiles = entrypoints.main.filter(
+          //   fileName => !fileName.endsWith('.map')
+          // );
+
+          let entrypointFiles = [];
+
+          let filterUnMap = function (entryFiles){
+              return entryFiles.filter(
+                fileName => !fileName.endsWith('.map')
+              );
+          };
+          // 遍历所有入口文件生成然后再加入entrypointFiles 
+          Object.keys(entrypoints).forEach(entry => {
+              entrypointFiles.push(filterUnMap(entrypoints[entry]))
+          });
 
           return {
             files: manifestFiles,

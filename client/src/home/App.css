@@ -1,0 +1,100 @@
+.btn {
+  width: 100px;
+  height: 50px;
+  background-color: pink;
+}
+
+.title {
+  margin: 0 auto;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.price {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.range {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.fm-text {
+  border: 1px solid #d2d2d2;
+  height: 24px;
+  outline: none;
+  font-size: 14px;
+  padding-left: 50px;
+  box-sizing: border-box;
+  border-radius: 6px;
+}
+
+.label-text {
+  margin-right: 10px;
+}
+
+.submit-btn {
+  width: 200px;
+  margin: 0 auto;
+  background-color: #3D7AF9;
+  border-radius: 22px;
+  font-size: 20px;
+  height: 44px;
+  line-height: 44px;
+  outline: none;
+  color: #fff;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.countdown-time {
+  font-size: 40px;
+  text-align: center;
+}
+
+.new-btn {
+  width: 200px;
+  margin: 0 auto;
+  background-color: #3D7AF9;
+  border-radius: 22px;
+  font-size: 20px;
+  height: 44px;
+  line-height: 44px;
+  outline: none;
+  color: #fff;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.new-btn.disabled {
+  background-color: gray;
+  cursor: auto;
+}
+
+.price-info div {
+  text-align: center;
+}
+
+.price-info .max-price-name {
+  text-align: center;
+}
+
+.price-info .max-price {
+  text-align: center;
+}

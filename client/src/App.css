@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+.fm-text {
+  border: 1px solid #d2d2d2;
+  height: 44px;
+  outline: none;
+  font-size: 14px;
+  padding-left: 50px;
+  box-sizing: border-box;
+  border-radius: 12px;
+}
+
