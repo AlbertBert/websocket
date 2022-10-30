@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { mySetInterval } from '../common/utils';
-// import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 import './App.css';
 
 const socket = window.io('http://localhost:3000');
@@ -26,7 +25,14 @@ function App() {
 
 
   useEffect(() => {
+    if (!username) {
+      return;
+    }
     socket.on('start', (data) => {
+      console.log('username', username);
+      if (!username) {
+        return;
+      }
       setMaxPriceInfo({});
       console.log('msg', data);
       setProjectName(data.name);
@@ -34,18 +40,20 @@ function App() {
       const wucha = Date.now() - startTime;
       console.log('wucha', wucha)
       setTimeSpace(wucha);
-      
       setStartPrice(data.startPrice);
       setType('case3');
       setTimerData(data);
     });
 
     socket.on('maxPriceInfo', (maxPriceInfo) => {
+      if (!username) {
+        return;
+      }
       console.log('msg', maxPriceInfo);
       setMaxPriceInfo(maxPriceInfo);
     });
 
-  }, []);
+  }, [username]);
   const [leftTime, setLeftTime] = useState(0);
 
   useEffect(() => {
@@ -75,20 +83,16 @@ function App() {
   const handleSubmit = () => {
     const name = nameRef?.current?.value;
     if (!name) {
-      alert('姓名不能为空');
+      alert('Please enter your name');
       return;
     }
     setUsername(name);
     setType('case2');
-    // setTimeout(() => {
-    //   setTotalTime(10);
-    //   setType('case3');
-    // }, 5000);
   }
   const handleToubiaoSubmit = () => {
 
     if (price > 0 && maxPriceInfo.maxPrice > 0 && price < maxPriceInfo.maxPrice) {
-      alert('投标过低');
+      alert('Bid too low!');
       return;
     }
     const data = {
@@ -104,12 +108,12 @@ function App() {
         type === 'case1' && (
           <div className='paipai-form'>
             <div className='name'>
-              <label className='label-text'>姓名:</label>
+              <label className='label-text'>Name:</label>
               <input className='name-input fm-text' type="text" ref={nameRef} />
             </div>
             <div className='submit-btn' onClick={() => {
               handleSubmit();
-            }}>提交</div>
+            }}>Submit</div>
           </div>
         )
       }
@@ -119,13 +123,13 @@ function App() {
             {
               maxPriceInfo.username && (
               <div className='last-paimai'>
-                <div className='last-winner-name'>上轮竞标者姓名：{maxPriceInfo.username}</div>
-                <div className='last-winner-price'>上轮竞标者价格：{maxPriceInfo.maxPrice}</div>
+                <div className='last-winner-name'>Bidders from previous round：{maxPriceInfo.username}</div>
+                <div className='last-winner-price'>Bids from previous round：{maxPriceInfo.maxPrice}</div>
               </div>
               )
             }
             <div className='wait-paimai'>
-              等待下一次拍卖开始
+              Waiting for auction start 
             </div>
           </>
         )
@@ -141,41 +145,37 @@ function App() {
               )
             }
             <div className='paimai-info'>
-              <div className='name'>项目名称：{projectName}</div>
-              <div className='max-price-name'>当前最高出价者名称：{maxPriceInfo.username || '拍卖师'}</div>
-              <div className='maxprice'>当前最高价格：{maxPriceInfo.maxPrice || startPrice}</div>
+              <div className='name'>Item name：{projectName}</div>
+              <div className='max-price-name'>Current highest bidder：{maxPriceInfo.username || 'Autioneer'}</div>
+              <div className='maxprice'>Current highest bid：{maxPriceInfo.maxPrice || startPrice}</div>
             </div>
             <div className='price'>
-              <label className='label-text'>价格:</label>
+              <label className='label-text'>Price:</label>
               <input className='price-input fm-text' type="number" min={1} ref={priceRef} onChange={() => {
                 const price = priceRef?.current?.value;
                 console.log('price', price)
                 setPrice(Number(price));
-                if (price > 0 && maxPriceInfo.maxPrice > 0 && price <= maxPriceInfo.maxPrice) {
+                const tempMaxPrice = maxPriceInfo.maxPrice || startPrice
+                if (price > 0 && tempMaxPrice > 0 && price <= tempMaxPrice) {
                   setErrorTip('投标过低');
                 } else {
                   setErrorTip('');
                 }
               }} />
             </div>
-            {/* {
-              price > 0 && maxPriceInfo.maxPrice > 0 && price < maxPriceInfo.maxPrice && (
-                <div className='error-tip'>投标过低</div>
-              )
-            } */}
             {
               errorTip && (
-                <div className='error-tip'>投标过低</div>
+                <div className='error-tip'>Bid too low!</div>
               )
             }
             {
               maxPriceInfo.username === username && (
-                <div className='success-tip'>您是当前最高投标人！</div>
+                <div className='success-tip'>You are currently the highest bidder!</div>
               )
             }
             <div className={`new-btn ${leftTime > 0 ? 'normal' : 'disabled'}`} onClick={() => {
               handleToubiaoSubmit();
-            }}>提交</div>
+            }}>Submit</div>
           </div>
         )
       }

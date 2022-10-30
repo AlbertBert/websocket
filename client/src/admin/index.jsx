@@ -6,7 +6,7 @@ import App from './App';
 ReactDOM.render(
   <React.StrictMode>
     <>
-      <div className="title">投标者页面</div>
+      <div className="title">Page for Bidder</div>
       <App />
     </>
   </React.StrictMode>,

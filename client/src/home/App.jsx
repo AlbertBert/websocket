@@ -79,12 +79,12 @@ function App() {
   const handlePaimai = () => {
     const name = nameRef?.current?.value;
     if (!name) {
-      alert('项目名称不能为空');
+      alert('Please enter item name');
       return;
     }
     const price = priceRef?.current?.value;
     if (price <= 0) {
-      alert('价格必须大于0');
+      alert('Price must be greater than zero');
       return;
     }
     const range = rangeRef?.current?.value;
@@ -101,7 +101,7 @@ function App() {
 
   const handleNewPaimai = () => {
     if (leftTime > 0) {
-      alert('拍卖尚未结束');
+      alert('Auction in progress');
       return;
     }
     setType('case1');
@@ -113,20 +113,20 @@ function App() {
         type === 'case1' && (
           <div className='paipai-form'>
             <div className='name'>
-              <label className='label-text'>项目名称:</label>
+              <label className='label-text'>Item name:</label>
               <input className='name-input fm-text' type="text" ref={nameRef} />
             </div>
             <div className='price'>
-              <label className='label-text'>起拍价格:</label>
+              <label className='label-text'>Reserve price:</label>
               <input className='price-input fm-text' type="number" min={1} ref={priceRef} />
             </div>
             <div className='range'>
-              <label className='label-text'>拍卖时长:</label>
+              <label className='label-text'>Auction duration:</label>
               <input className='price-input fm-text' type="range" min="10" max="80" ref={rangeRef} step={10} />
             </div>
             <div className='submit-btn' onClick={() => {
               handlePaimai();
-            }}>开始拍卖</div>
+            }}>Start Auction</div>
           </div>
         )
       }
@@ -141,26 +141,33 @@ function App() {
               )
             }
             <div className='price-info'>
-              <div className='max-price-name'>最高竞标者姓名：{maxPriceInfo.username || '拍卖师'}</div>
-              <div className='max-price'>最高竞标者价格：{maxPriceInfo.maxPrice || startPrice}</div>
-              <div className='total-count'>竞标总数：{maxPriceInfo.totalCount}</div>
+              <div className='sub-title'>拍卖实时信息</div>
+              <div className='max-price-name'>Highest bidder：{maxPriceInfo.username || 'Autioneer'}</div>
+              <div className='max-price'>Highest bid price：{maxPriceInfo.maxPrice || startPrice}</div>
+              <div className='total-count'>Number of bids：{maxPriceInfo.totalCount || 0}</div>
+            </div>
+            <div className='price-info'>
+              <div className='sub-title'>投标者信息</div>
               {
                 userHistoryList.map((item, index) => {
                   return (
-                    <div key={index}>
-                      <div className='total-count'>姓名：{item.username}</div>
-                      <div className='total-count'>最高价格：{item.maxPrice}</div>
-                      <div className='total-count'>次数：{item.count}</div>
+                    <div key={index} className="bidder-info">
+                      <div className='item'>Bidder name：{item.username}</div>
+                      <div className='item'>Highest bid：{item.maxPrice}</div>
+                      <div className='item'>Time：{item.count}</div>
                     </div>
                   )
                 })
               }
+            </div>
+            <div className='price-info'>
+              <div className='sub-title'>投标历史记录</div>
               {
                 historyList.map((item, index) => {
                   return (
-                    <div key={index}>
-                      <div className='total-count'>姓名：{item.username}</div>
-                      <div className='total-count'>价格：{item.price}</div>
+                    <div key={index} className="history-item">
+                      <div className='item'>Name：{item.username}</div>
+                      <div className='item'>Price：{item.price}</div>
                     </div>
                   )
                 })
@@ -168,7 +175,7 @@ function App() {
             </div>
             <div className={`new-btn ${hasTimer ? 'disabled' : 'normal'}`} onClick={() => {
               handleNewPaimai();
-            }}>开始新的拍卖</div>
+            }}>Start new auction</div>
           </div>
         )
       }

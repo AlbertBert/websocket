@@ -6,7 +6,9 @@
 
 .title {
   margin: 0 auto;
+  font-size: 40px;
   margin-bottom: 20px;
+  font-weight: bold;
   text-align: center;
 }
 
@@ -97,4 +99,24 @@
 
 .price-info .max-price {
   text-align: center;
+}
+
+.bidder-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bidder-info .item {
+  margin-right: 20px;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history-item .item {
+  margin-right: 20px;
 }

@@ -5,7 +5,7 @@ import App from './App';
 ReactDOM.render(
   <React.StrictMode>
     <>
-      <div className="title">拍卖者页面</div>
+      <div className="title">Page for Autioneer</div>
       <App />
     </>
   </React.StrictMode>,
